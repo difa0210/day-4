@@ -28,6 +28,7 @@ const express = require("express");
 // Method app, untuk merespon setiap permintaan berbentuk HTTP, seperti GET, POST, PUT, & Delete
 const app = express();
 const PORT = 4500;
+// Untuk mengoneksikan ke postgressql database
 const db = require("./connection/db");
 
 app.set("view engine", "hbs"); // Set template engine (hbs)
@@ -159,7 +160,7 @@ app.get("/blog-detail/:id", function (request, response) {
       function (errs, result) {
         if (errs) throw errs;
 
-        // Render, untuk menampilkan
+        // Render, untuk menjalankan
         response.render("blog-detail", { blog: result.rows[0] });
       }
     );
@@ -197,7 +198,7 @@ app.get("/edit-blog/:id", function (request, response) {
 
   db.connect(function (err, client, done) {
     if (err) throw err;
-
+    // Query untuk mendapatkan data dari database table tb_blogs berdasarkan idnya
     client.query(
       `SELECT * FROM tb_blogs WHERE id = $1`,
       [blogId],
@@ -205,6 +206,7 @@ app.get("/edit-blog/:id", function (request, response) {
         if (errs) throw errs;
 
         response.render("edit-blog", {
+          // result hasil dari query, rows jadi hanya menampilkan rows dari database
           blog: result.rows[0],
         });
       }
@@ -245,6 +247,7 @@ app.get("/delete-blog/:id", function (request, response) {
       [blogId],
       function (errs, result) {
         if (errs) throw errs;
+
         response.redirect("/blog");
       }
     );
