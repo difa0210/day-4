@@ -1,0 +1,11 @@
+// import postgres pool
+const {Pool} = require("pg")
+
+const dbPool = new Pool({
+    database: "personal-web",
+    port: 5432,
+    user: "postgres",
+    password: "difa0210"
+});
+
+module.exports = dbPool

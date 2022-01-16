@@ -1,0 +1,204 @@
+body {
+    background: linear-gradient(white, white, azure);
+    margin: 0px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: larger;
+}
+nav {
+    color: azure;
+    background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
+    display: flex;
+    height: 7vh;
+}
+nav div {
+    display: flex;
+    align-items: center;
+    flex: 50%;
+    }
+nav div.left {
+    padding-left: 100px;
+    }
+nav ul {
+    list-style-type: none;
+    }
+nav ul li {
+    display: inline;
+    }
+nav ul li a {
+    font-size: x-large;
+    color: azure;
+    text-decoration: none;
+    padding: 30px;
+    }
+nav .left ul li a:hover {
+    text-shadow: 0px 0px 10px rgb(255, 0, 149);
+    color: rgb(255, 255, 255);
+}
+nav img {
+    border-left: 3px solid azure;
+    border-right: 3px solid azure;
+    width: 70px; height: 70px;
+    
+}
+nav div.right {
+    padding-right: 100px;
+    display: flex;
+    justify-content: flex-end;
+  }
+nav .right a {
+    color: azure;
+    background-color: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
+    border-radius: 10px;
+    border: 3px solid azure;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px 20px;
+    text-align: center;
+    transition: 0,5s;
+}
+nav .right a:hover {
+    background-color: azure;
+    color: rgb(0, 62, 78);
+} 
+
+/* Container */
+.container {
+    height: 97vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container .section {
+    display: flex;
+    width: 85%;
+}
+.container .section .left {
+    width: 30%;
+}
+.container .section .right {
+    color: rgb(0, 90, 121);
+    width: 70%;
+    padding-left: 50px;
+    display: flex;
+    text-align: left;
+    font-size: larger;
+}
+
+/* Personal Card */
+.leftname {
+    background-color: white;
+    color: rgb(0, 90, 121);
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: larger;
+    width: 90%;
+    text-align: center;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px rgb(0, 39, 53);
+}
+.img1 {
+    width: 95%;
+    border-radius : 10px;
+    box-shadow: 0px 0px 2px rgb(0, 39, 53);
+    margin: 10px;
+}
+.namasaya {
+    color: rgb(0, 90, 121);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 35px;
+ }
+.bio {
+    text-align: center;
+    margin: 15px;
+    padding: 0px;
+    font-size: 85%;
+}
+.table {
+    padding: 0px 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    color: rgb(0, 90, 121);
+    border: 1px solid rgb(255, 255, 255);
+    font-size: 85%;
+}
+.th {
+    padding: 10px 0px;
+    background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
+    color: rgb(255, 255, 255);
+    border-top-right-radius: 10px; border-top-left-radius: 10px;
+    font-size: larger;
+    width: 70%;
+}
+.td {
+    width: 30%;
+    padding: 10px 15px;
+    background-color: azure;
+    color: rgb(0, 90, 121);
+    border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;
+} 
+
+/* What I Do */
+.skillcontainer {
+    display: block;
+    text-align: left;
+}
+.skillcontainer1 {
+    display: flex;
+    font-size: large;
+    padding: 10px 0px;
+}
+
+/* Container Skill */
+.container .section .right .skill-1, .container .section .right .skill-2, .container .section .right .skill-3 {
+    width: 50%;
+    margin-right: 50px;
+    text-decoration: none;
+}
+.container .section .right .skill-1 .judul1, .container .section .right .skill-2 .judul2, .container .section .right .skill-3 .judul3 {
+    background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
+    box-shadow: 0px 0px 2px rgb(0, 0, 0);
+    color: azure;
+    text-decoration: none;
+    border-radius: 10px;
+    text-align: center;
+    justify-content: center;
+    padding: 10px;
+    font-weight: 100%;
+    transition: 0,6s;
+}
+.container .section .right .skill-1 .judul1:hover, .container .section .right .skill-2 .judul2:hover, .container .section .right .skill-3 .judul3:hover {
+    background: rgb(6, 109, 134);
+    text-decoration: none;
+}
+.s1, .s2, .s3 {
+    padding: 0px 10px;
+}
+.a1, .a2, .a3 {
+text-decoration: none;
+}
+
+/* Found Me */
+.instagram, .facebook, .twitter, .whatsapp {
+    width: 60px;
+    background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
+    height: 60px;
+    border-radius: 15px;
+    margin: 0px 15px;
+    box-shadow: 0px 0px 2px rgb(0, 0, 0);
+}
+.instagram:hover, .facebook:hover, .twitter:hover, .whatsapp:hover {
+    background: rgb(6, 109, 134);
+}
+.skillcontainer2 {
+    margin-top: 5%;
+    text-align: center;
+}
+.skillcontainer2 .img{
+    display: flex;
+    justify-content: center;
+}
