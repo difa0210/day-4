@@ -13,35 +13,21 @@
 
 // Method POST data yang dikirim tidak terbatas. Sedangkan method GET tidak boleh lebih dari 2047 karakter.
 
-// Buat variable untuk menampung express yang sudah di install.
-// Buat variable untuk menampung variable express(), express function dan variable untuk PORT.
-// Buat variable untuk memuat file connection yang nantinya akan menghubungkan ke postgresSQL
-// Buat routing express menggunakan app. method yang berfungsi untuk merespon setiap permintaan berbentuk http.
-// Lalu buat get() yang berfungsi untuk menampilkan data pada URLnya, kemudian akan ditampung oleh action.
-// Di dalam parameter get()/post() isi ("name file URL", function("yang berisi 2 param untuk meminta dan merespon")).
-//
-// Listen berfungsi untuk menjalankan routing yang didalamnya terdapat 2 param yang berisi port dan function() untuk memberikan aksi.
-
-// Untuk menggunakan modul "express" di dalam node.modules
 const express = require("express");
 
-// Method app, untuk merespon setiap permintaan berbentuk HTTP, seperti GET, POST, PUT, & Delete
 const app = express();
 const PORT = 4500;
-// Untuk mengoneksikan ke postgressql database
+
 const db = require("./connection/db");
 
-app.set("view engine", "hbs"); // Set template engine (hbs)
+app.set("view engine", "hbs");
 
-// Static Files adalah file yang dapat diunduh oleh client dari server, contohnya gambar, file CSS, dan file JavaScript.
-app.use("/public", express.static(__dirname + "/public")); // set public folder/path untuk menampilkan gambar & css
+app.use("/public", express.static(__dirname + "/public"));
 
-//urlencode, agar code dari params dikonversi menjadi string dan terbaca didalam console
 app.use(express.urlencoded({ extended: false }));
 
 let isLogin = true;
 
-// Format waktu
 function getFullTime(time) {
   console.log(time);
 
@@ -116,32 +102,27 @@ function getDistanceTime(time) {
   }
 }
 
-// method GET akan menampilkan data/nilai pada URL, kemudian akan ditampung oleh action.
 app.get("/", function (request, response) {
   response.render("index");
 });
 
 app.get("/blog", function (request, response) {
-  // Koneksi ke database
   db.connect(function (err, client, done) {
-    // Jika error maka tampilkan error
     if (err) throw err;
-    // Query untuk mendapatkan data dari database table tb_blogs
+
     client.query(
       "SELECT * FROM tb_blogs ORDER BY id ASC",
       function (errs, result) {
         if (errs) throw errs;
 
         let rows = result.rows;
-
-        // Fungsi map ini digunakan untuk mengolah setiap element di array/object dan kemudian menghasilkan array/object baru
         const data = rows.map((blog) => ({
           ...blog,
           isLogin,
           postAt: getFullTime(blog.postAt),
           postAtDistance: getDistanceTime(blog.postAt),
         }));
-        // Merender halaman blog dengan melempar data blogs
+
         response.render("blog", { isLogin, blogs: data });
       }
     );
@@ -153,40 +134,37 @@ app.get("/blog-detail/:id", function (request, response) {
 
   db.connect(function (err, client, done) {
     if (err) throw err;
-      // Query untuk mendapatkan data dari database table tb_blogs berdasarkan idnya
+
     client.query(
       `SELECT * FROM tb_blogs WHERE id = $1`,
       [blogId],
       function (errs, result) {
         if (errs) throw errs;
 
-        // Render, untuk menjalankan
-        response.render("blog-detail", { blog: result.rows[0] });
+        response.render("blog-detail", { blog: { ...result.rows[0], postAt: getFullTime(result.rows[0].postAt),
+          },
+        });
       }
     );
   });
 });
-// routing halaman add blog
+
 app.get("/add-blog", function (request, response) {
   response.render("add-blog");
 });
 
-// Method POST akan mengirimkan data atau nilai langsung ke action untuk ditampung, tanpa menampilkan pada URL.
 app.post("/blog", function (request, response) {
   let data = request.body;
 
   db.connect(function (err, client, done) {
     if (err) throw err;
 
-    // Query untuk memasukkan data baru ke database table tb_blogs
     client.query(
       `INSERT INTO tb_blogs(title, content, author, image) VALUES ($1, $2, $3, $4)`,
       [data.inputTitle, data.inputContent, "Difa Hafidzuddin", data.inputImage],
       function (errs, result) {
-
         if (errs) throw errs;
 
-        // Render, untuk menampilkan
         response.redirect("/blog");
       }
     );
@@ -198,7 +176,7 @@ app.get("/edit-blog/:id", function (request, response) {
 
   db.connect(function (err, client, done) {
     if (err) throw err;
-    // Query untuk mendapatkan data dari database table tb_blogs berdasarkan idnya
+
     client.query(
       `SELECT * FROM tb_blogs WHERE id = $1`,
       [blogId],
@@ -206,7 +184,6 @@ app.get("/edit-blog/:id", function (request, response) {
         if (errs) throw errs;
 
         response.render("edit-blog", {
-          // result hasil dari query, rows jadi hanya menampilkan rows dari database
           blog: result.rows[0],
         });
       }
@@ -215,14 +192,12 @@ app.get("/edit-blog/:id", function (request, response) {
 });
 
 app.post("/edit-blog/:id", function (request, response) {
-  // Mengubah isi dari blog berdasarkan indexnya, lalu setelah di klik submit, maka akan ke halaman blog.
   let blogId = request.params.id;
   let { inputTitle, inputContent, inputImage } = request.body;
 
   db.connect(function (err, client, done) {
     if (err) throw err;
 
-    // Query untuk merubah data berdasarkan idnya di database table tb_blogs
     client.query(
       `UPDATE tb_blogs SET title=$2, content=$3, image=$4 WHERE id = $1`,
       [blogId, inputTitle, inputContent, inputImage],
@@ -241,7 +216,6 @@ app.get("/delete-blog/:id", function (request, response) {
   db.connect(function (err, client, done) {
     if (err) throw err;
 
-    // Query untuk menghapus data berdasarkan idnya di database table tb_blogs
     client.query(
       `DELETE FROM tb_blogs  WHERE id = $1`,
       [blogId],
@@ -258,7 +232,6 @@ app.get("/contact", function (request, response) {
   response.render("contact");
 });
 
-// Listen untuk menjalankan routing
 app.listen(PORT, function () {
   console.log(`Server starting on ${PORT}`);
 });
