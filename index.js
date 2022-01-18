@@ -13,10 +13,14 @@
 
 // Method POST data yang dikirim tidak terbatas. Sedangkan method GET tidak boleh lebih dari 2047 karakter.
 
+// `SELECT * FROM tb_blogs WHERE id = ${blogId}`,
+// let data = { ...result.rows[0];
+// response.render("blog-detail", { blog: data });
+
 const express = require("express");
 
 const app = express();
-const PORT = 4500;
+const PORT = 5000;
 
 const db = require("./connection/db");
 
@@ -102,46 +106,44 @@ function getDistanceTime(time) {
   }
 }
 
-app.get("/", function (request, response) {
+app.get("/", (request, response) => {
   response.render("index");
 });
 
-app.get("/blog", function (request, response) {
-  db.connect(function (err, client, done) {
+app.get("/blog", (request, response) => {
+  db.connect((err, client, done) => {
     if (err) throw err;
 
-    client.query(
-      "SELECT * FROM tb_blogs ORDER BY id ASC",
-      function (errs, result) {
-        if (errs) throw errs;
+    client.query("SELECT * FROM tb_blogs ORDER BY id ASC", (errs, result) => {
+      if (errs) throw errs;
 
-        let rows = result.rows;
-        const data = rows.map((blog) => ({
-          ...blog,
-          isLogin,
-          postAt: getFullTime(blog.postAt),
-          postAtDistance: getDistanceTime(blog.postAt),
-        }));
+      let rows = result.rows;
+      const data = rows.map((blog) => ({
+        ...blog,
+        isLogin,
+        postAt: getFullTime(blog.postAt),
+        postAtDistance: getDistanceTime(blog.postAt),
+      }));
 
-        response.render("blog", { isLogin, blogs: data });
-      }
-    );
+      response.render("blog", { isLogin, blogs: data });
+    });
   });
 });
 
-app.get("/blog-detail/:id", function (request, response) {
-  let blogId = request.params.id;
-
-  db.connect(function (err, client, done) {
+app.get("/blog-detail/:id", (request, response) => {
+  db.connect((err, client, done) => {
     if (err) throw err;
 
     client.query(
-      `SELECT * FROM tb_blogs WHERE id = $1`,
-      [blogId],
-      function (errs, result) {
+      `SELECT * FROM tb_blogs WHERE id = ${request.params.id}`,
+
+      (errs, result) => {
         if (errs) throw errs;
 
-        response.render("blog-detail", { blog: { ...result.rows[0], postAt: getFullTime(result.rows[0].postAt),
+        response.render("blog-detail", {
+          blog: {
+            ...result.rows[0],
+            postAt: getFullTime(result.rows[0].postAt),
           },
         });
       }
@@ -149,20 +151,16 @@ app.get("/blog-detail/:id", function (request, response) {
   });
 });
 
-app.get("/add-blog", function (request, response) {
-  response.render("add-blog");
-});
-
 app.post("/blog", function (request, response) {
   let data = request.body;
 
-  db.connect(function (err, client, done) {
+  db.connect((err, client, done) => {
     if (err) throw err;
 
     client.query(
       `INSERT INTO tb_blogs(title, content, author, image) VALUES ($1, $2, $3, $4)`,
       [data.inputTitle, data.inputContent, "Difa Hafidzuddin", data.inputImage],
-      function (errs, result) {
+      (errs, result) => {
         if (errs) throw errs;
 
         response.redirect("/blog");
@@ -171,16 +169,14 @@ app.post("/blog", function (request, response) {
   });
 });
 
-app.get("/edit-blog/:id", function (request, response) {
-  let blogId = request.params.id;
-
-  db.connect(function (err, client, done) {
+app.get("/edit-blog/:id", (request, response) => {
+  db.connect((err, client, done) => {
     if (err) throw err;
 
     client.query(
-      `SELECT * FROM tb_blogs WHERE id = $1`,
-      [blogId],
-      function (errs, result) {
+      `SELECT * FROM tb_blogs WHERE id = ${request.params.id}`,
+
+      (errs, result) => {
         if (errs) throw errs;
 
         response.render("edit-blog", {
@@ -191,17 +187,19 @@ app.get("/edit-blog/:id", function (request, response) {
   });
 });
 
-app.post("/edit-blog/:id", function (request, response) {
+app.post("/edit-blog/:id", (request, response) => {
   let blogId = request.params.id;
-  let { inputTitle, inputContent, inputImage } = request.body;
+  let data = request.body;
 
-  db.connect(function (err, client, done) {
+  db.connect((err, client, done) => {
     if (err) throw err;
 
     client.query(
-      `UPDATE tb_blogs SET title=$2, content=$3, image=$4 WHERE id = $1`,
-      [blogId, inputTitle, inputContent, inputImage],
-      function (errs, result) {
+      `UPDATE tb_blogs
+      SET title=$2, content=$3, image=$4
+      WHERE id = $1`,
+      [blogId, data.inputTitle, data.inputContent, data.inputImage],
+      (errs, result) => {
         if (errs) throw errs;
 
         response.redirect("/blog");
@@ -210,16 +208,14 @@ app.post("/edit-blog/:id", function (request, response) {
   });
 });
 
-app.get("/delete-blog/:id", function (request, response) {
-  let blogId = request.params.id;
-
-  db.connect(function (err, client, done) {
+app.get("/delete-blog/:id", (request, response) => {
+  db.connect((err, client, done) => {
     if (err) throw err;
 
     client.query(
-      `DELETE FROM tb_blogs  WHERE id = $1`,
-      [blogId],
-      function (errs, result) {
+      `DELETE FROM tb_blogs
+      WHERE id = ${request.params.id}`,
+      (errs, result) => {
         if (errs) throw errs;
 
         response.redirect("/blog");
@@ -228,10 +224,14 @@ app.get("/delete-blog/:id", function (request, response) {
   });
 });
 
-app.get("/contact", function (request, response) {
+app.get("/add-blog", (request, response) => {
+  response.render("add-blog");
+});
+
+app.get("/contact", (request, response) => {
   response.render("contact");
 });
 
-app.listen(PORT, function () {
+app.listen(PORT, () => {
   console.log(`Server starting on ${PORT}`);
 });
