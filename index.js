@@ -107,14 +107,23 @@ function getDistanceTime(time) {
 }
 
 app.get("/", (request, response) => {
-  response.render("index");
+  db.connect((err, client, done) => {
+    if (err) throw err;
+
+    client.query(`SELECT * FROM tb_skills`, (errs, result) => {
+      if (errs) throw errs;
+
+      let data = result.rows;
+      response.render("index", { data: data });
+    });
+  });
 });
 
 app.get("/blog", (request, response) => {
   db.connect((err, client, done) => {
     if (err) throw err;
 
-    client.query("SELECT * FROM tb_blogs ORDER BY id ASC", (errs, result) => {
+    client.query(`SELECT * FROM tb_blogs ORDER BY id ASC`, (errs, result) => {
       if (errs) throw errs;
 
       let rows = result.rows;
@@ -174,7 +183,8 @@ app.get("/edit-blog/:id", (request, response) => {
     if (err) throw err;
 
     client.query(
-      `SELECT * FROM tb_blogs WHERE id = ${request.params.id}`,
+      `SELECT * FROM tb_blogs
+      WHERE id = ${request.params.id}`,
 
       (errs, result) => {
         if (errs) throw errs;
@@ -196,9 +206,9 @@ app.post("/edit-blog/:id", (request, response) => {
 
     client.query(
       `UPDATE tb_blogs
-      SET title=$2, content=$3, image=$4
+      SET "title"=$2, "content"=$3, "image"=$4, "postAt"=$5
       WHERE id = $1`,
-      [blogId, data.inputTitle, data.inputContent, data.inputImage],
+      [blogId, data.inputTitle, data.inputContent, data.inputImage, new Date()],
       (errs, result) => {
         if (errs) throw errs;
 

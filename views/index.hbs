@@ -35,18 +35,17 @@
                         <h3 class="namasaya"> DIFA HAFIDZUDDIN </h3>
                         <p class="bio">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas eum perferendis, illo quisquam cumque facere dolores.</p>
                         <table class="table">
+                            
                             <tr>
                                 <th class="th">  Experience  </th>
                                 <th class="th">  Year  </th>
                             </tr>
+                            {{#each data}}
                             <tr>
-                                <td class="td"> My Skill 1 </td>
-                                <td class="td"> 2021 </td>
+                                <td class="td"> {{this.experience}} </td>
+                                <td class="td"> {{this.year}} </td>
                             </tr>
-                            <tr>
-                                <td class="td"> My Skill 2 </td>
-                                <td class="td"> 2022 </td>
-                            </tr>
+                            {{/each}}
                         </table>
                     </div>
                 </div>

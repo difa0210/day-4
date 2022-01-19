@@ -1,13 +1,13 @@
 body {
   background: linear-gradient(white, white, azure);
   margin: 0px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   font-size: larger;
 }
 nav {
   color: azure;
-  background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
+  background: linear-gradient(rgb(6, 109, 134), rgb(0, 62, 78));
   display: flex;
   height: 7vh;
 }
@@ -15,22 +15,22 @@ nav div {
   display: flex;
   align-items: center;
   flex: 50%;
-  }
+}
 nav div.left {
   padding-left: 100px;
-  }
+}
 nav ul {
   list-style-type: none;
-  }
+}
 nav ul li {
   display: inline;
-  }
+}
 nav ul li a {
   font-size: x-large;
   color: azure;
   text-decoration: none;
   padding: 30px;
-  }
+}
 nav .left ul li a:hover {
   text-shadow: 0px 0px 10px rgb(255, 0, 149);
   color: rgb(255, 255, 255);
@@ -38,7 +38,10 @@ nav .left ul li a:hover {
 nav img {
   border-left: 3px solid azure;
   border-right: 3px solid azure;
-  width: 70px; height: 70px;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
 }
 nav div.right {
   padding-right: 100px;
@@ -47,20 +50,20 @@ nav div.right {
 }
 nav .right a {
   color: azure;
-  background-color: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
+  background-color: linear-gradient(rgb(6, 109, 134), rgb(0, 62, 78));
   border-radius: 10px;
   border: 3px solid azure;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   text-decoration: none;
   padding: 10px 20px;
   text-align: center;
-  transition: 0,5s;
+  transition: 0, 5s;
 }
 nav .right a:hover {
   background-color: azure;
   color: rgb(0, 62, 78);
-} 
+}
 
 /* Blog Form */
 .blog-form {
@@ -72,13 +75,13 @@ nav .right a:hover {
 }
 
 .blog-form .form-container {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   width: 500px;
   padding: 30px;
   border-radius: 20px;
   color: rgb(255, 255, 255);
-  background: linear-gradient(rgb(0, 90, 121),rgb(0, 62, 78));
+  background: linear-gradient(rgb(0, 90, 121), rgb(0, 62, 78));
   box-shadow: 0px 0px 5px rgb(0, 39, 53);
 }
 
@@ -147,12 +150,12 @@ select {
   padding: 10px 15px;
   color: rgb(255, 255, 255);
   border: 3px solid rgb(255, 255, 255);
-  background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(rgb(6, 109, 134), rgb(0, 62, 78));
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   font-size: 20px;
   cursor: pointer;
-  transition: 0,5s;
+  transition: 0, 5s;
 }
 
 .blog-form form button:hover {
@@ -182,7 +185,7 @@ select {
   margin-bottom: 60px;
   border: 1px solid rgb(255, 255, 255);
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgb(0, 39, 53);;
+  box-shadow: 0px 0px 10px rgb(0, 39, 53);
   display: flex;
 }
 
@@ -228,7 +231,7 @@ select {
   font-weight: bold;
   border: 0;
   border-radius: 4px;
-  background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78));
+  background: linear-gradient(rgb(6, 109, 134), rgb(0, 62, 78));
   color: azure;
   cursor: pointer;
   text-decoration: none;
@@ -262,7 +265,6 @@ select {
 .blog-detail {
   display: flex;
   justify-content: center;
-  
 }
 
 .blog-detail-container {
