@@ -1,109 +1,171 @@
-<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Personal Web</title>
-        <link rel="stylesheet" href="../public/assets/css/style-index.css">
-    </head>
+  <head>
+    <title>Personal Web</title>
+    <link rel="stylesheet" href="../public/assets/css/style-index.css" />
+  </head>
 
-    <body>
-        <nav>
-            <div class="left">
-                    <a href="/">
-                        <img src="../public/assets/images/Logo difa-01-01.jpg" alt="My Logo">
-                    </a>
-                <ul>
-                    <li>
-                        <a href="/">Home</a>
-                    </li>
-                    <li>
-                        <a href="/blog">Blog</a>
-                    </li>
-                </ul>
+  <body>
+    <nav>
+      <div class="left">
+        <a href="/">
+          <img
+            src="../public/assets/images/Logo difa-01-01.jpg"
+            alt="My Logo"
+          />
+        </a>
+        <ul>
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/blog">Blog</a>
+          </li>
+        </ul>
+         {{#if isLogin}}
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-5">
+        <li class="nav-item px-3">
+          <span class="nav-link active text-white" aria-current="page" href="/login"> Hello {{user.name}} </span>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/logout">Logout</a>
+        </li>
+      </ul>
+      {{else}}
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-5">
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/register">Register</a>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/login">Login</a>
+        </li>
+      </ul>
+      {{/if}}
+      </div>
+
+      
+
+      <div class="right">
+        <a class="buttoncontact" href="/contact">Contact Me</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="section">
+
+        <div class="left">
+          <div class="leftname">
+            <img
+              src="https://mir-s3-cdn-cf.behance.net/user/276/383ad1449241267.614b4c0f85018.jpg"
+              class="img1"
+            />
+            <h3 class="namasaya"> DIFA HAFIDZUDDIN </h3>
+            <p class="bio">Lorem ipsum, dolor sit amet consectetur adipisicing
+              elit. Voluptas eum perferendis, illo quisquam cumque facere
+              dolores.</p>
+            <table class="table">
+
+              <tr>
+                <th class="th"> Experience </th>
+                <th class="th"> Year </th>
+              </tr>
+              {{#each data}}
+                <tr>
+                  <td class="td"> {{this.experience}} </td>
+                  <td class="td"> {{this.year}} </td>
+                </tr>
+              {{/each}}
+            </table>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="skillcontainer">
+            <h1>What I Do</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Voluptatum labore commodi eveniet porro incidunt excepturi
+              exercitationem. Natus cupiditate veniam eum illum dolorum placeat,
+              quisquam nemo debitis deserunt, ipsum quibusdam laborum.</p>
+
+            <div class="skillcontainer1">
+
+              <div class="skill-1">
+                <a
+                  class="a1"
+                  href="https://www.google.com/search?q=front+end+developer+adalah&rlz=1C1ASUM_enID955ID956&ei=dW3SYbDtGK-cseMPtvi34Ac&oq=front+end+d&gs_lcp=Cgdnd3Mtd2l6EAEYATIFCAAQgAQyBQgAEIAEMggIABCABBCxAzIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQ6BwgAEEcQsAM6BwgAELADEEM6CAgAEOQCELADOhAILhDHARDRAxDIAxCwAxBDSgQIQRgASgQIRhgBUJcDWPsRYMMeaAFwAngAgAE9iAF0kgEBMpgBAKABAcgBEcABAQ&sclient=gws-wiz"
+                >
+                  <h3 class="judul1">FRONT-END DEVELOPER</h3>
+                </a>
+                <p class="s1">Lorem, ipsum dolor sit amet consectetur
+                  adipisicing elit. Reiciendis, amet asperiores enim ipsum
+                  possimus dolorem officiis dicta voluptate magnam voluptatum.</p>
+              </div>
+
+              <div class="skill-2">
+                <a
+                  class="a2"
+                  href="https://www.google.com/search?q=back+end+developer+adalah&rlz=1C1ASUM_enID955ID956&ei=e23SYberHv2ZseMPs7m2sAo&oq=ba+end+developer+adalah&gs_lcp=Cgdnd3Mtd2l6EAMYADIECAAQDTIICAAQCBAHEB4yCAgAEAcQBRAeMggIABAHEAUQHjoGCAAQBxAeSgQIQRgASgQIRhgAUABYlAFgzBBoAHACeACAAT-IAXySAQEymAEAoAEBwAEB&sclient=gws-wiz"
+                >
+                  <h3 class="judul2">BACK-END DEVELOPER</h3>
+                </a>
+                <p class="s2">Lorem, ipsum dolor sit amet consectetur
+                  adipisicing elit. Reiciendis, amet asperiores enim ipsum
+                  possimus dolorem officiis dicta voluptate magnam voluptatum.</p>
+              </div>
+
+              <div class="skill-3">
+                <a
+                  class="a3"
+                  href="https://www.google.com/search?q=full+stack+javascript&rlz=1C1ASUM_enID955ID956&oq=fullsta&aqs=chrome.7.69i57j0i10i512l3j0i512l2j0i10i512l2j0i512j0i10i512.5839j0j15&sourceid=chrome&ie=UTF-8"
+                >
+                  <h3 class="judul3">FULLSTACK JAVASCRIPT</h3>
+                </a>
+                <p class="s3">Lorem, ipsum dolor sit amet consectetur
+                  adipisicing elit. Reiciendis, amet asperiores enim ipsum
+                  possimus dolorem officiis dicta voluptate magnam voluptatum.</p>
+              </div>
+
             </div>
 
-            <div class="right">
-                <a class="buttoncontact" href="/contact">Contact Me</a>
+            <div class="skillcontainer2">
+              <h2>Found Me on</h2>
+              <div class="img">
+                <a href="https://g.co/kgs/xYUgRG">
+                  <img
+                    class="instagram"
+                    src="../public/assets/images/instagram-01.png"
+                    alt="Instagram"
+                  />
+                </a>
+                <a href="https://g.co/kgs/a9najH">
+                  <img
+                    class="facebook"
+                    src="../public/assets/images/linkedin-01.png"
+                    alt="LinkedIn"
+                  />
+                </a>
+                <a href="https://g.co/kgs/LdZ9cX">
+                  <img
+                    class="twitter"
+                    src="../public/assets/images/twitter-01.png"
+                    alt="Twitter"
+                  />
+                </a>
+                <a href="https://g.co/kgs/QahQ23">
+                  <img
+                    class="whatsapp"
+                    src="../public/assets/images/whatsapp-01.png"
+                    alt="Whatsapp"
+                  />
+                </a>
+              </div>
             </div>
-        </nav>
-
-        <div class="container">
-            <div class="section">
-                
-                <div class="left">
-                    <div class="leftname">
-                        <img src="https://mir-s3-cdn-cf.behance.net/user/276/383ad1449241267.614b4c0f85018.jpg" class="img1">
-                        <h3 class="namasaya"> DIFA HAFIDZUDDIN </h3>
-                        <p class="bio">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas eum perferendis, illo quisquam cumque facere dolores.</p>
-                        <table class="table">
-                            
-                            <tr>
-                                <th class="th">  Experience  </th>
-                                <th class="th">  Year  </th>
-                            </tr>
-                            {{#each data}}
-                            <tr>
-                                <td class="td"> {{this.experience}} </td>
-                                <td class="td"> {{this.year}} </td>
-                            </tr>
-                            {{/each}}
-                        </table>
-                    </div>
-                </div>
-
-                <div class="right">
-                    <div class="skillcontainer">
-                        <h1>What I Do</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum labore commodi eveniet porro incidunt excepturi exercitationem. Natus cupiditate veniam eum illum dolorum placeat, quisquam nemo debitis deserunt, ipsum quibusdam laborum.</p>
-                        
-                        <div class="skillcontainer1">
-
-                            <div class="skill-1">
-                                <a class="a1" href="https://www.google.com/search?q=front+end+developer+adalah&rlz=1C1ASUM_enID955ID956&ei=dW3SYbDtGK-cseMPtvi34Ac&oq=front+end+d&gs_lcp=Cgdnd3Mtd2l6EAEYATIFCAAQgAQyBQgAEIAEMggIABCABBCxAzIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQ6BwgAEEcQsAM6BwgAELADEEM6CAgAEOQCELADOhAILhDHARDRAxDIAxCwAxBDSgQIQRgASgQIRhgBUJcDWPsRYMMeaAFwAngAgAE9iAF0kgEBMpgBAKABAcgBEcABAQ&sclient=gws-wiz">
-                                <h3 class="judul1">FRONT-END DEVELOPER</h3>
-                                </a>
-                                <p class="s1">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, amet asperiores enim ipsum possimus dolorem officiis dicta voluptate magnam voluptatum.</p> 
-                            </div>
-
-                            <div class="skill-2">
-                                <a class="a2" href="https://www.google.com/search?q=back+end+developer+adalah&rlz=1C1ASUM_enID955ID956&ei=e23SYberHv2ZseMPs7m2sAo&oq=ba+end+developer+adalah&gs_lcp=Cgdnd3Mtd2l6EAMYADIECAAQDTIICAAQCBAHEB4yCAgAEAcQBRAeMggIABAHEAUQHjoGCAAQBxAeSgQIQRgASgQIRhgAUABYlAFgzBBoAHACeACAAT-IAXySAQEymAEAoAEBwAEB&sclient=gws-wiz">
-                                <h3 class="judul2">BACK-END DEVELOPER</h3>
-                                </a>
-                                <p class="s2">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, amet asperiores enim ipsum possimus dolorem officiis dicta voluptate magnam voluptatum.</p>
-                            </div>
-
-                            <div class="skill-3">
-                                <a class="a3" href="https://www.google.com/search?q=full+stack+javascript&rlz=1C1ASUM_enID955ID956&oq=fullsta&aqs=chrome.7.69i57j0i10i512l3j0i512l2j0i10i512l2j0i512j0i10i512.5839j0j15&sourceid=chrome&ie=UTF-8">
-                                <h3 class="judul3">FULLSTACK JAVASCRIPT</h3>
-                                </a>
-                                <p class="s3">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, amet asperiores enim ipsum possimus dolorem officiis dicta voluptate magnam voluptatum.</p>
-                            </div>
-
-                        </div>
-
-                        <div class="skillcontainer2">
-                            <h2>Found Me on</h2>
-                            <div class="img">
-                                <a href="https://g.co/kgs/xYUgRG">
-                                    <img class="instagram" src="../public/assets/images/instagram-01.png" alt="Instagram">
-                                </a>
-                                <a href="https://g.co/kgs/a9najH">
-                                    <img class="facebook" src="../public/assets/images/linkedin-01.png" alt="LinkedIn">
-                                </a>
-                                <a href="https://g.co/kgs/LdZ9cX">
-                                    <img class="twitter" src="../public/assets/images/twitter-01.png" alt="Twitter">
-                                </a>
-                                <a href="https://g.co/kgs/QahQ23">
-                                    <img class="whatsapp" src="../public/assets/images/whatsapp-01.png" alt="Whatsapp">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>  
-    </body>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
- <!-- <a href="mailto:difahafidzuddin0210@gmail.com?subject=Test subject&body=testpesan"> Send </a> -->
+<!-- <a href="mailto:difahafidzuddin0210@gmail.com?subject=Test subject&body=testpesan"> Send </a> -->
 
 <!-- Dalam HTML, tag list terdiri dari 2 jenis, ordered list (berurutan) dan unordered list (tidak berurutan). Ordered list akan ditampilkan dengan angka atau huruf, sedangkan unordered list dengan bulatan atau kotak.
 

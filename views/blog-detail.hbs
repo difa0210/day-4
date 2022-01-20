@@ -19,8 +19,28 @@
             <a href="/blog">Blog</a>
           </li>
         </ul>
+        {{#if isLogin}}
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-5">
+        <li class="nav-item px-3">
+          <span class="nav-link active text-white" aria-current="page" href="/login"> Hello {{user.name}} </span>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/logout">Logout</a>
+        </li>
+      </ul>
+      {{else}}
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-5">
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/register">Register</a>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/login">Login</a>
+        </li>
+      </ul>
+      {{/if}}
       </div>
       <div class="right">
+        
         <a href="/contact"> Contact Me </a>
       </div>
     </nav>

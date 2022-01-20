@@ -65,6 +65,15 @@ nav .right a:hover {
   color: rgb(0, 62, 78);
 }
 
+.alert {
+  background-color: azure;
+  display: flex;
+  height: 4vh;
+  margin-top: 3vh;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Blog Form */
 .blog-form {
   height: 97vh;
@@ -163,17 +172,9 @@ select {
   color: rgb(0, 62, 78);
 }
 
-.blog hr {
-  border: 1px solid rgb(6, 109, 134);
-  width: 80%;
-  margin-right: auto;
-  margin-left: auto;
-}
-
 /* Blog list */
 .blog .blog-list {
-  margin-top: 80px;
-  margin-bottom: 80px;
+  margin: 80px 0;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -195,9 +196,9 @@ select {
 
 .blog .blog-list .blog-list-item .blog-image img {
   width: 100%;
-  height: 300px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .blog .blog-list .blog-list-item .blog-content {
@@ -206,8 +207,8 @@ select {
 }
 
 .blog .blog-list .btn-group {
-  text-align: right;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: end;
 }
 
 .blog .blog-list .btn-group .btn-edit {
@@ -215,10 +216,10 @@ select {
   font-weight: bold;
   border: 0;
   border-radius: 4px;
-  background: border-box;
+  background: linear-gradient(rgb(6, 109, 134), rgb(0, 62, 78));
   cursor: pointer;
   text-decoration: none;
-  color: rgb(0, 62, 78);
+  color: azure;
 }
 
 .blog .blog-list .btn-group .btn-edit:hover {
@@ -231,8 +232,7 @@ select {
   font-weight: bold;
   border: 0;
   border-radius: 4px;
-  background: linear-gradient(rgb(6, 109, 134), rgb(0, 62, 78));
-  color: azure;
+  color: rgb(0, 62, 78);
   cursor: pointer;
   text-decoration: none;
 }
@@ -249,16 +249,12 @@ select {
 
 .blog .blog-list .detail-blog-content {
   font-weight: normal;
-  font-size: 15px;
-  line-height: 15px;
 }
 
 .blog .blog-list .blog-list-item p {
   margin-top: 20px;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: justify;
+  font-size: 20px;
+  text-align: left;
 }
 
 /* Blog Detail */
@@ -286,16 +282,14 @@ select {
 
 .blog-detail-container .author {
   font-weight: 100;
-  font-size: 20px;
+  font-size: 25px;
   line-height: 120%;
   margin-bottom: 20px;
 }
 
 .blog-detail-container p {
   margin-top: 40px;
-  font-style: normal;
   font-weight: bold;
-  font-size: 24px;
   line-height: 140%;
   text-align: justify;
 }

@@ -1,107 +1,104 @@
 <html>
-  <head>
-    <title>Creating Blog Page</title>
-    <link rel="stylesheet" href="../public/assets/css/style.css" />
-  </head>
-  <body>
-    
-    <!-- NavBar -->
-    <nav>
-      <div class="left">
-        <a href="/">
-          <img src="../public/assets/images/Logo difa-01-01.jpg" alt="logo" />
-        </a>
-        <ul>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/blog">Blog</a>
-          </li>
-        </ul>
-      </div>
-      <div class="right">
-        <a href="/contact"> Contact Me </a>
-      </div>
-    </nav>
 
-    <!-- Blog -->
-    <!-- Form -->
-    <div class="blog">
-      {{!-- <div class="blog-form">
-        <div class="form-container">
-          <form onsubmit="addBlog(event)">
-            <h1>Create Post Blog</h1>
-            <div>
-              <label for="input-blog-title">Title</label>
-              <input id="input-blog-title" />
-            </div>
-            <div>
-              <label for="input-blog-content">Content</label>
-              <textarea id="input-blog-content"></textarea>
-            </div>
-            <div>
-              <label>Upload Image</label>
-              <div class="input-blog-image-group">
-                <label for="input-blog-image">
-                  <p>Attach File</p>
-                  <img src="../public/assets/images/file.png" alt="file" />
-                </label>
-                <input type="file" id="input-blog-image" hidden />
-              </div>
-            </div>
-            <div class="button-group">
-              <button>Post Blog</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <hr class="line" /> --}}
+<head>
+  <title>Creating Blog Page</title>
+  <link rel="stylesheet" href="../public/assets/css/style.css" />
+</head>
 
-       {{#if isLogin}}
-        <div style="text-align:right; margin-right: 130px; margin-top: 50px">
-          <a href="/add-blog" style="background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78)); color: azure; padding: 7px 20px; border-radius: 5px; text-decoration:none">Add New Blogs</a>
-        </div>
+<body>
+
+  <!-- NavBar -->
+  <nav>
+    <div class="left">
+      <a href="/">
+        <img src="../public/assets/images/Logo difa-01-01.jpg" alt="logo" />
+      </a>
+      <ul>
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/blog">Blog</a>
+        </li>
+      </ul>
+      {{#if isLogin}}
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-5">
+        <li class="nav-item px-3">
+          <span class="nav-link active text-white" aria-current="page" href="/login"> Hello {{user.name}} </span>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/logout">Logout</a>
+        </li>
+      </ul>
+      {{else}}
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-5">
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/register">Register</a>
+        </li>
+        <li class="nav-item px-3">
+          <a class="nav-link active text-white" aria-current="page" href="/login">Login</a>
+        </li>
+      </ul>
       {{/if}}
+    </div>
+    <div class="right">
+      <a href="/contact"> Contact Me </a>
+  </nav>
+  </div>
+  {{#if messages.success}}
+  <div class="alert" role="alert">
+    {{messages.success}}
+  </div>
+  {{/if}}
 
-      <div id="contents" class="blog-list">
+  <!-- Blog -->
+  <div class="blog">
 
-        <!-- dynamic content would be here -->
-        {{#each blogs}}
-        <div class="blog-list-item">
-          <div class="blog-image">
-            <img src={{this.image}} alt="" />
+    {{#if isLogin}}
+    <div style="text-align:right; margin-right: 130px; margin-top: 50px">
+      <a href="/add-blog"
+        style="background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78)); color: azure; padding: 7px 20px; border-radius: 5px; text-decoration:none">Add
+        New Blogs</a>
+    </div>
+    {{/if}}
+
+    <div id="contents" class="blog-list">
+
+      <!-- dynamic content would be here -->
+      {{#each blogs}}
+      <div class="blog-list-item">
+        <div class="blog-image">
+          <img src="../upload/{{this.image}}" alt="" />
+        </div>
+
+        <div class="blog-content">
+          {{#if isLogin}}
+          <div class="btn-group">
+            <a href="/edit-blog/{{this.id}}" class="btn-edit">Edit Post</button>
+              <a href="/delete-blog/{{this.id}}" class="btn-post">Delete Blog</button>
+          </div>
+          {{/if}}
+
+          <h1>
+            <a href="/blog-detail/{{this.id}}" target="_blank">{{this.title}}</a>
+          </h1>
+
+          <div class="detail-blog-content">
+            {{this.postAt}} | {{this.author}}
           </div>
 
-          <div class="blog-content">
-            {{#if isLogin}}
-              <div class="btn-group">
-                <a href="/edit-blog/{{this.id}}" class="btn-edit">Edit Post</button>
-                <a href="/delete-blog/{{this.id}}" class="btn-post">Delete Blog</button>
-              </div>
-            {{/if}}
-
-            <h1>
-              <a href="/blog-detail/{{this.id}}" target="_blank"
-                >{{this.title}}</a
-              >
-            </h1>
-
-            <div class="detail-blog-content">
-              {{this.postAt}} | {{this.author}}
-            </div>
-
-            <p>
-              {{this.content}}
-            </p>
-            <div style="text-align: right;">
-              <span >{{this.postAtDistance}}</span>
-            </div>
+          <p>
+            {{this.content}}
+          </p>
+          <div style="text-align: right;">
+            <span>{{this.postAtDistance}}</span>
           </div>
         </div>
-        {{/each}}
       </div>
+      {{/each}}
     </div>
-    <script src="blog.js"></script>
-  </body>
+  </div>
+  <script src="blog.js"></script>
+</body>
+
 </html>

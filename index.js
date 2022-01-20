@@ -19,16 +19,38 @@
 
 const express = require("express");
 
+const bcrypt = require("bcrypt");
+const flash = require("express-flash");
+const session = require("express-session");
+
 const app = express();
-const PORT = 5000;
+const PORT = 5500;
 
 const db = require("./connection/db");
+const upload = require("./middlewares/fileUpload");
 
 app.set("view engine", "hbs");
 
 app.use("/public", express.static(__dirname + "/public"));
+app.use("/upload", express.static(__dirname + "/upload"));
 
 app.use(express.urlencoded({ extended: false }));
+
+app.use(flash());
+
+app.use(
+  session({
+    cookie: {
+      maxAge: 2 * 60 * 60 * 1000, //Menimpan data selama 2 jam
+      secure: false,
+      httpOnly: true,
+    },
+    store: new session.MemoryStore(),
+    saveUninitialized: true,
+    resave: false,
+    secret: "secretValue",
+  })
+);
 
 let isLogin = true;
 
@@ -120,10 +142,13 @@ app.get("/", (request, response) => {
 });
 
 app.get("/blog", (request, response) => {
+  const query = `SELECT tb_blogs.id, tb_blogs.title, tb_blogs.content, tb_blogs.image, tb_user.name AS author, tb_blogs.author_id, tb_blogs."postAt"
+    FROM tb_blogs LEFT JOIN tb_user ON tb_blogs.author_id = tb_user.id`;
+
   db.connect((err, client, done) => {
     if (err) throw err;
 
-    client.query(`SELECT * FROM tb_blogs ORDER BY id ASC`, (errs, result) => {
+    client.query(query, (errs, result) => {
       if (errs) throw errs;
 
       let rows = result.rows;
@@ -134,87 +159,88 @@ app.get("/blog", (request, response) => {
         postAtDistance: getDistanceTime(blog.postAt),
       }));
 
-      response.render("blog", { isLogin, blogs: data });
+      response.render("blog", {
+        isLogin: request.session.isLogin,
+        user: request.session.user,
+        blogs: data,
+      });
+    });
+  });
+});
+
+app.post("/blog", upload.single("inputImage"), (request, response) => {
+  let data = request.body;
+
+  const authorId = request.session.id;
+
+  const image = request.file.filename;
+
+  const query = `INSERT INTO tb_blogs(title, content, image, author_id)
+  VALUES (${data.inputTitle}, ${data.inputContent}, ${image}, ${authorId})`;
+
+  db.connect((err, client, done) => {
+    if (err) throw err;
+
+    client.query(query, (errs, result) => {
+      if (errs) throw errs;
+
+      response.redirect("/blog");
     });
   });
 });
 
 app.get("/blog-detail/:id", (request, response) => {
-  db.connect((err, client, done) => {
-    if (err) throw err;
-
-    client.query(
-      `SELECT * FROM tb_blogs WHERE id = ${request.params.id}`,
-
-      (errs, result) => {
-        if (errs) throw errs;
-
-        response.render("blog-detail", {
-          blog: {
-            ...result.rows[0],
-            postAt: getFullTime(result.rows[0].postAt),
-          },
-        });
-      }
-    );
-  });
-});
-
-app.post("/blog", function (request, response) {
-  let data = request.body;
+  const query = `SELECT * FROM tb_blogs WHERE id = ${request.params.id}`;
 
   db.connect((err, client, done) => {
     if (err) throw err;
 
-    client.query(
-      `INSERT INTO tb_blogs(title, content, author, image) VALUES ($1, $2, $3, $4)`,
-      [data.inputTitle, data.inputContent, "Difa Hafidzuddin", data.inputImage],
-      (errs, result) => {
-        if (errs) throw errs;
+    client.query(query, (errs, result) => {
+      if (errs) throw errs;
 
-        response.redirect("/blog");
-      }
-    );
+      response.render("blog-detail", {
+        blog: {
+          ...result.rows[0],
+          postAt: getFullTime(result.rows[0].postAt),
+        },
+      });
+    });
   });
 });
 
 app.get("/edit-blog/:id", (request, response) => {
+  const query = `SELECT * FROM tb_blogs WHERE id = ${request.params.id}`;
+
   db.connect((err, client, done) => {
     if (err) throw err;
 
-    client.query(
-      `SELECT * FROM tb_blogs
-      WHERE id = ${request.params.id}`,
+    client.query(query, (errs, result) => {
+      if (errs) throw errs;
 
-      (errs, result) => {
-        if (errs) throw errs;
-
-        response.render("edit-blog", {
-          blog: result.rows[0],
-        });
-      }
-    );
+      response.render("edit-blog", {
+        blog: result.rows[0],
+      });
+    });
   });
 });
 
 app.post("/edit-blog/:id", (request, response) => {
   let blogId = request.params.id;
   let data = request.body;
+  const query = `UPDATE tb_blogs
+  SET "title"=${data.inputTitle}, "content"=${data.inputContent}, "image"=${
+    data.inputImage
+  }, "postAt"=${new Date()}
+  WHERE id = ${blogId}`;
 
   db.connect((err, client, done) => {
     if (err) throw err;
 
-    client.query(
-      `UPDATE tb_blogs
-      SET "title"=$2, "content"=$3, "image"=$4, "postAt"=$5
-      WHERE id = $1`,
-      [blogId, data.inputTitle, data.inputContent, data.inputImage, new Date()],
-      (errs, result) => {
-        if (errs) throw errs;
+    client.query(query, (errs, result) => {
+      if (errs) throw errs;
 
-        response.redirect("/blog");
-      }
-    );
+      response.redirect("/blog");
+    });
   });
 });
 
@@ -234,8 +260,83 @@ app.get("/delete-blog/:id", (request, response) => {
   });
 });
 
+app.get("/register", (request, response) => {
+  response.render("register");
+});
+
+app.post("/register", function (request, response) {
+  const { inputName, inputEmail, inputPassword } = request.body;
+  const hashedPassword = bcrypt.hashSync(inputPassword, 10);
+  const query = `INSERT INTO tb_user(name, email, password) VALUES (${inputName}, ${inputEmail}, ${hashedPassword})`;
+
+  db.connect((err, client, done) => {
+    if (err) throw err;
+
+    client.query(query, (errs, result) => {
+      if (errs) throw errs;
+
+      response.redirect("/login");
+    });
+  });
+});
+
+app.get("/login", (request, response) => {
+  response.render("login");
+});
+
+app.post("/login", (request, response) => {
+  const { inputEmail, inputPassword } = request.body;
+  const query = `SELECT * FROM tb_user WHERE email=${inputEmail}`;
+
+  db.connect((err, client, done) => {
+    if (err) throw err;
+
+    client.query(query, (errs, result) => {
+      if (errs) throw errs;
+
+      if (result.rows.length == 0) {
+        request.flash("danger", "Email yang anda masukkan salah!");
+
+        return response.redirect("/login");
+      }
+      const isMatch = bcrypt.compareSync(
+        inputPassword,
+        result.rows[0].password
+      );
+
+      if (isMatch) {
+        request.session.isLogin = true;
+        request.session.user = {
+          id: result.rows[0].id,
+          name: result.rows[0].name,
+          email: result.rows[0].email,
+        };
+        request.flash("success", "Login Success");
+        response.redirect("/blog");
+      } else {
+        request.flash("danger", "Password yang anda masukkan salah!");
+        response.redirect("/login");
+      }
+    });
+  });
+});
+
+app.get("/logout", function (request, response) {
+  request.session.destroy();
+  response.redirect("/blog");
+});
+
 app.get("/add-blog", (request, response) => {
-  response.render("add-blog");
+  // if (request.session.isLogin) {
+  //   request.flash("danger","Please Login!")
+  //   response.redirect("/login")
+
+  // }
+
+  response.render("add-blog", {
+    isLogin: request.session.isLogin,
+    user: request.session.user,
+  });
 });
 
 app.get("/contact", (request, response) => {
