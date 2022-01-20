@@ -60,7 +60,7 @@
 
                 <p class="h2 text-center">Edit Blog Post</p>
                 
-                <form action="/edit-blog/{{blog.id}}" method="post">
+                <form action="/edit-blog/{{blog.id}}" method="post" enctype="multipart/form-data">
 
                     <div class="mb-3">
                         <label for="inputTitle" class="form-label">Title</label>
@@ -74,7 +74,7 @@
                         
                     <div class="mb-3">
                         <label for="inputImage" class="form-label">Upload Image</label>
-                        <input type="text" name="inputImage" value="{{blog.image}}" class="form-control" id="inputImage" placeholder="Input Image URL">
+                        <input type="file" name="inputImage" class="form-control" id="inputImage" value="../upload/{{blog.image}}" placeholder="Input Image">
                     </div>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

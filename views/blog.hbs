@@ -24,7 +24,7 @@
       {{#if isLogin}}
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-5">
         <li class="nav-item px-3">
-          <span class="nav-link active text-white" aria-current="page" href="/login"> Hello {{user.name}} </span>
+          <span class="nav-link active text-white" aria-current="page"> Hello {{user.name}} </span>
         </li>
         <li class="nav-item px-3">
           <a class="nav-link active text-white" aria-current="page" href="/logout">Logout</a>
@@ -54,13 +54,13 @@
   <!-- Blog -->
   <div class="blog">
 
-    {{#if isLogin}}
+    
     <div style="text-align:right; margin-right: 130px; margin-top: 50px">
       <a href="/add-blog"
         style="background: linear-gradient(rgb(6, 109, 134),rgb(0, 62, 78)); color: azure; padding: 7px 20px; border-radius: 5px; text-decoration:none">Add
         New Blogs</a>
     </div>
-    {{/if}}
+    
 
     <div id="contents" class="blog-list">
 
@@ -80,7 +80,7 @@
           {{/if}}
 
           <h1>
-            <a href="/blog-detail/{{this.id}}" target="_blank">{{this.title}}</a>
+            <a href="/blog-detail/{{this.id}}" >{{this.title}}</a>
           </h1>
 
           <div class="detail-blog-content">

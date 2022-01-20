@@ -41,7 +41,7 @@ app.use(flash());
 app.use(
   session({
     cookie: {
-      maxAge: 2 * 60 * 60 * 1000, //Menimpan data selama 2 jam
+      maxAge: 2 * 60 * 60 * 1000, //Menyimpan data selama 2 jam
       secure: false,
       httpOnly: true,
     },
@@ -52,11 +52,9 @@ app.use(
   })
 );
 
-let isLogin = true;
+// let isLogin = true;
 
 function getFullTime(time) {
-  console.log(time);
-
   let month = [
     "January",
     "February",
@@ -81,19 +79,14 @@ function getFullTime(time) {
   }
 
   let date = time.getDate();
-  console.log(date);
 
   let monthIndex = time.getMonth();
-  console.log(month[monthIndex]);
 
   let year = time.getFullYear();
-  console.log(year);
 
   let hours = addZero(time.getHours());
-  console.log(hours);
 
   let minutes = addZero(time.getMinutes());
-  console.log(minutes);
 
   let fullTime = `${date} ${month[monthIndex]} ${year} ${hours}:${minutes} WIB`;
   return fullTime;
@@ -129,14 +122,16 @@ function getDistanceTime(time) {
 }
 
 app.get("/", (request, response) => {
+  const query = `SELECT * FROM tb_skills`;
+
   db.connect((err, client, done) => {
     if (err) throw err;
 
-    client.query(`SELECT * FROM tb_skills`, (errs, result) => {
+    client.query(query, (errs, result) => {
       if (errs) throw errs;
 
       let data = result.rows;
-      response.render("index", { data: data });
+      response.render("index", {isLogin: request.session.isLogin, user: request.session.user, skillCard: data });
     });
   });
 });
@@ -154,10 +149,11 @@ app.get("/blog", (request, response) => {
       let rows = result.rows;
       const data = rows.map((blog) => ({
         ...blog,
-        isLogin,
+        isLogin: blog.author_id === request.session?.user?.id ? request.session.isLogin : false,
         postAt: getFullTime(blog.postAt),
         postAtDistance: getDistanceTime(blog.postAt),
       }));
+     
 
       response.render("blog", {
         isLogin: request.session.isLogin,
@@ -170,13 +166,12 @@ app.get("/blog", (request, response) => {
 
 app.post("/blog", upload.single("inputImage"), (request, response) => {
   let data = request.body;
-
-  const authorId = request.session.id;
-
+  const authorId = request.session.user.id;
+ 
   const image = request.file.filename;
 
   const query = `INSERT INTO tb_blogs(title, content, image, author_id)
-  VALUES (${data.inputTitle}, ${data.inputContent}, ${image}, ${authorId})`;
+  VALUES ('${data.inputTitle}', '${data.inputContent}', '${image}', '${authorId}')`;
 
   db.connect((err, client, done) => {
     if (err) throw err;
@@ -190,8 +185,10 @@ app.post("/blog", upload.single("inputImage"), (request, response) => {
 });
 
 app.get("/blog-detail/:id", (request, response) => {
-  const query = `SELECT * FROM tb_blogs WHERE id = ${request.params.id}`;
+  const id = request.params.id;
 
+  const query = `SELECT tb_blogs.id, tb_blogs.title, tb_blogs.content, tb_blogs.image, tb_user.name AS author, tb_blogs.author_id, tb_blogs."postAt"
+  FROM tb_blogs LEFT JOIN tb_user ON tb_blogs.author_id = tb_user.id WHERE tb_blogs.id = ${id}`;
   db.connect((err, client, done) => {
     if (err) throw err;
 
@@ -209,7 +206,9 @@ app.get("/blog-detail/:id", (request, response) => {
 });
 
 app.get("/edit-blog/:id", (request, response) => {
-  const query = `SELECT * FROM tb_blogs WHERE id = ${request.params.id}`;
+  const id = request.params.id;
+  console.log({ id });
+  const query = `SELECT * FROM tb_blogs WHERE id = ${id}`;
 
   db.connect((err, client, done) => {
     if (err) throw err;
@@ -224,14 +223,34 @@ app.get("/edit-blog/:id", (request, response) => {
   });
 });
 
-app.post("/edit-blog/:id", (request, response) => {
-  let blogId = request.params.id;
+app.post("/edit-blog/:id", upload.single("inputImage"), (request, response) => {
   let data = request.body;
-  const query = `UPDATE tb_blogs
-  SET "title"=${data.inputTitle}, "content"=${data.inputContent}, "image"=${
-    data.inputImage
-  }, "postAt"=${new Date()}
-  WHERE id = ${blogId}`;
+  let blogId = request.params.id;
+  const image = request.file?.filename;
+  
+  db.connect((err, client, done) => {
+    if (err) throw err;
+
+    client.query(
+      `UPDATE tb_blogs
+    SET "title"=$2, "content"=$3, "image"=$4, "postAt"=$5
+    WHERE id =$1`,
+      [blogId, data.inputTitle, data.inputContent, image, new Date()],
+      (errs, result) => {
+        if (errs) throw errs;
+
+        response.redirect("/blog");
+      }
+    );
+  });
+});
+
+app.get("/delete-blog/:id", (request, response) => {
+  if (!request.session.isLogin) {
+    request.flash("danger", "Please login!");
+    return response.redirect("/login");
+  }
+  const query = `DELETE FROM tb_blogs WHERE id = ${request.params.id}`;
 
   db.connect((err, client, done) => {
     if (err) throw err;
@@ -244,22 +263,6 @@ app.post("/edit-blog/:id", (request, response) => {
   });
 });
 
-app.get("/delete-blog/:id", (request, response) => {
-  db.connect((err, client, done) => {
-    if (err) throw err;
-
-    client.query(
-      `DELETE FROM tb_blogs
-      WHERE id = ${request.params.id}`,
-      (errs, result) => {
-        if (errs) throw errs;
-
-        response.redirect("/blog");
-      }
-    );
-  });
-});
-
 app.get("/register", (request, response) => {
   response.render("register");
 });
@@ -267,7 +270,7 @@ app.get("/register", (request, response) => {
 app.post("/register", function (request, response) {
   const { inputName, inputEmail, inputPassword } = request.body;
   const hashedPassword = bcrypt.hashSync(inputPassword, 10);
-  const query = `INSERT INTO tb_user(name, email, password) VALUES (${inputName}, ${inputEmail}, ${hashedPassword})`;
+  const query = `INSERT INTO tb_user(name, email, password) VALUES ('${inputName}', '${inputEmail}', '${hashedPassword}')`;
 
   db.connect((err, client, done) => {
     if (err) throw err;
@@ -286,7 +289,8 @@ app.get("/login", (request, response) => {
 
 app.post("/login", (request, response) => {
   const { inputEmail, inputPassword } = request.body;
-  const query = `SELECT * FROM tb_user WHERE email=${inputEmail}`;
+
+  let query = `SELECT * FROM tb_user WHERE email='${inputEmail}'`;
 
   db.connect((err, client, done) => {
     if (err) throw err;
@@ -327,15 +331,14 @@ app.get("/logout", function (request, response) {
 });
 
 app.get("/add-blog", (request, response) => {
-  // if (request.session.isLogin) {
-  //   request.flash("danger","Please Login!")
-  //   response.redirect("/login")
-
-  // }
+  if (!request.session.isLogin) {
+    request.flash("danger", "Please Login!");
+    response.redirect("/login");
+  }
 
   response.render("add-blog", {
-    isLogin: request.session.isLogin,
     user: request.session.user,
+    isLogin: request.session.isLogin,
   });
 });
 

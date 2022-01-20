@@ -6,7 +6,7 @@ const dbPool = new Pool({
     database: "personal-web",
     port: 5432,
     user: "postgres",
-    password: "difa0210"
+    password: "difa0210",
 });
 
 // export module
