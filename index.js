@@ -131,7 +131,11 @@ app.get("/", (request, response) => {
       if (errs) throw errs;
 
       let data = result.rows;
-      response.render("index", {isLogin: request.session.isLogin, user: request.session.user, skillCard: data });
+      response.render("index", {
+        isLogin: request.session.isLogin,
+        user: request.session.user,
+        skillCard: data,
+      });
     });
   });
 });
@@ -149,11 +153,13 @@ app.get("/blog", (request, response) => {
       let rows = result.rows;
       const data = rows.map((blog) => ({
         ...blog,
-        isLogin: blog.author_id === request.session?.user?.id ? request.session.isLogin : false,
+        isLogin:
+          blog.author_id === request.session.user?.id
+            ? request.session.isLogin
+            : false,
         postAt: getFullTime(blog.postAt),
         postAtDistance: getDistanceTime(blog.postAt),
       }));
-     
 
       response.render("blog", {
         isLogin: request.session.isLogin,
@@ -167,7 +173,7 @@ app.get("/blog", (request, response) => {
 app.post("/blog", upload.single("inputImage"), (request, response) => {
   let data = request.body;
   const authorId = request.session.user.id;
- 
+
   const image = request.file.filename;
 
   const query = `INSERT INTO tb_blogs(title, content, image, author_id)
@@ -188,7 +194,7 @@ app.get("/blog-detail/:id", (request, response) => {
   const id = request.params.id;
 
   const query = `SELECT tb_blogs.id, tb_blogs.title, tb_blogs.content, tb_blogs.image, tb_user.name AS author, tb_blogs.author_id, tb_blogs."postAt"
-  FROM tb_blogs LEFT JOIN tb_user ON tb_blogs.author_id = tb_user.id WHERE tb_blogs.id = ${id}`;
+  FROM tb_blogs LEFT JOIN tb_user ON tb_blogs.author_id = tb_user.id WHERE tb_blogs.id = '${id}'`;
   db.connect((err, client, done) => {
     if (err) throw err;
 
@@ -208,7 +214,7 @@ app.get("/blog-detail/:id", (request, response) => {
 app.get("/edit-blog/:id", (request, response) => {
   const id = request.params.id;
   console.log({ id });
-  const query = `SELECT * FROM tb_blogs WHERE id = ${id}`;
+  const query = `SELECT * FROM tb_blogs WHERE id = '${id}'`;
 
   db.connect((err, client, done) => {
     if (err) throw err;
@@ -226,8 +232,8 @@ app.get("/edit-blog/:id", (request, response) => {
 app.post("/edit-blog/:id", upload.single("inputImage"), (request, response) => {
   let data = request.body;
   let blogId = request.params.id;
-  const image = request.file?.filename;
-  
+  const image = request.file.filename;
+
   db.connect((err, client, done) => {
     if (err) throw err;
 
@@ -246,10 +252,10 @@ app.post("/edit-blog/:id", upload.single("inputImage"), (request, response) => {
 });
 
 app.get("/delete-blog/:id", (request, response) => {
-  if (!request.session.isLogin) {
-    request.flash("danger", "Please login!");
-    return response.redirect("/login");
-  }
+  // if (!request.session.isLogin) {
+  //   request.flash("danger", "Please login!");
+  //   return response.redirect("/login");
+  // }
   const query = `DELETE FROM tb_blogs WHERE id = ${request.params.id}`;
 
   db.connect((err, client, done) => {
